@@ -4,7 +4,6 @@ import Result from 'components/Result/Result';
 import Filter from 'components/Filter/Filter';
 import { nanoid } from 'nanoid';
 import Notiflix from 'notiflix';
-import { addItem } from '../../redux/counter/itemSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { getContacts } from '../../redux/counter/selectors';
 import { fetchContacts, addContact } from '../../redux/counter/api';
@@ -20,7 +19,6 @@ const Form = () => {
     dispatch(fetchContacts());
   }, [dispatch]);
 
-  // console.log(items);
   const handleSubmit = evt => {
     evt.preventDefault();
     const contact = {
@@ -35,8 +33,6 @@ const Form = () => {
       Notiflix.Notify.failure('You should take another name');
       return;
     } else {
-      dispatch(addItem(contact));
-      console.log(JSON.stringify(contact, null, 2));
       dispatch(addContact(contact));
       evt.target.elements.name.value = '';
       evt.target.elements.number.value = '';
@@ -45,10 +41,6 @@ const Form = () => {
 
   return (
     <>
-      <div>
-        {isLoading && <b>Loading tasks...</b>}
-        {error && <b>{error}</b>}
-      </div>
       <form className={styles.form} onSubmit={handleSubmit}>
         <h2 className={styles.title}>Phonebook</h2>
         <label htmlFor="name">Name</label>
@@ -73,8 +65,10 @@ const Form = () => {
         </button>
       </form>
       <Filter />
+      {isLoading && <b>Loading tasks...</b>}
+      {error && <b>{error}</b>}
       <ul className={styles.gallery}>
-        {items.map(item => (
+        {filterItems.map(item => (
           <Result data={item} key={item.id} />
         ))}
       </ul>

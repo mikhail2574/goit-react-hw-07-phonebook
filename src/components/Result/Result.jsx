@@ -1,6 +1,6 @@
 import styles from './Result.module.css';
 import PropTypes from 'prop-types';
-import { removeItem } from '../../redux/counter/itemSlice';
+import { deleteContact } from '../../redux/counter/api';
 import { useDispatch } from 'react-redux';
 
 const Result = ({ data }) => {
@@ -15,7 +15,7 @@ const Result = ({ data }) => {
         className={styles.deleteBtn}
         data-id={id}
         type="button"
-        onClick={() => dispatch(removeItem(id))}
+        onClick={() => dispatch(deleteContact(id))}
       >
         🗑️
       </button>

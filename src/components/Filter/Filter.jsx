@@ -15,7 +15,7 @@ const Filter = () => {
   };
 
   const filterItem = e => {
-    return dispatch(filterItems({ q: e.target.value })); // Вызываем экшен для фильтрации
+    return dispatch(filterItems(e.target.value)); // Вызываем экшен для фильтрации
   };
 
   return (

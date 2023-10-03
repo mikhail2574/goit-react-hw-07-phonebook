@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchContacts } from './api';
+import { fetchContacts, addContact, deleteContact } from './api';
 
 const itemSlice = createSlice({
   name: 'items',
@@ -23,9 +23,9 @@ const itemSlice = createSlice({
       );
     },
     filterItems: (state, action) => {
-      if (action.payload && action.payload.q) {
+      if (action.payload && action.payload) {
         state.filteredItems = state.allItems.filter(contact =>
-          contact.name.includes(action.payload.q)
+          contact.name.toLowerCase().includes(action.payload.toLowerCase())
         );
       } else {
         state.filteredItems = state.allItems;
@@ -40,8 +40,38 @@ const itemSlice = createSlice({
       state.isLoading = false;
       state.error = null;
       state.allItems = action.payload;
+      state.filteredItems = action.payload;
     },
     [fetchContacts.rejected](state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [addContact.pending](state) {
+      state.isLoading = true;
+    },
+    [addContact.fulfilled](state, action) {
+      state.isLoading = false;
+      state.error = null;
+      state.allItems.push(action.payload);
+      state.filteredItems.push(action.payload);
+    },
+    [addContact.rejected](state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [deleteContact.pending](state) {
+      state.isLoading = true;
+    },
+    [deleteContact.fulfilled](state, action) {
+      state.isLoading = false;
+      state.error = null;
+      const index = state.allItems.findIndex(
+        task => task.id === action.payload.id
+      );
+      state.allItems.splice(index, 1);
+      state.filteredItems.splice(index, 1);
+    },
+    [deleteContact.rejected](state, action) {
       state.isLoading = false;
       state.error = action.payload;
     },
