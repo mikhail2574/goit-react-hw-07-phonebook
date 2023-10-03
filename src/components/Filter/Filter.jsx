@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './Filter.module.css';
 import { filterItems } from '../../redux/counter/itemSlice';
 import { useDispatch } from 'react-redux';
+import { setQ } from '../../redux/counter/itemSlice';
 
 const Filter = () => {
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ const Filter = () => {
   };
 
   const filterItem = e => {
-    return dispatch(filterItems(e.target.value)); // Вызываем экшен для фильтрации
+    return dispatch(setQ(e.target.value)); // Вызываем экшен для фильтрации
   };
 
   return (

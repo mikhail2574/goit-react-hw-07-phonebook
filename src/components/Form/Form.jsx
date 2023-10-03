@@ -2,7 +2,6 @@ import React from 'react';
 import styles from './Form.module.css';
 import Result from 'components/Result/Result';
 import Filter from 'components/Filter/Filter';
-import { nanoid } from 'nanoid';
 import Notiflix from 'notiflix';
 import { useSelector, useDispatch } from 'react-redux';
 import { getContacts } from '../../redux/counter/selectors';
@@ -10,7 +9,7 @@ import { fetchContacts, addContact } from '../../redux/counter/api';
 import { useEffect } from 'react';
 
 const Form = () => {
-  const filterItems = useSelector(state => state.item.filteredItems);
+  const q = useSelector(state => state.item.q);
   const items = useSelector(state => state.item.allItems);
   const { isLoading, error } = useSelector(getContacts);
 
@@ -24,7 +23,6 @@ const Form = () => {
     const contact = {
       name: evt.target.elements.name.value,
       number: evt.target.elements.number.value,
-      id: nanoid(),
     };
 
     const reservedName = items.some(user => user.name === contact.name);
@@ -38,6 +36,16 @@ const Form = () => {
       evt.target.elements.number.value = '';
     }
   };
+
+  function filterItems() {
+    if (q) {
+      return items.filter(contact =>
+        contact.name.toLowerCase().includes(q.toLowerCase())
+      );
+    } else {
+      return items;
+    }
+  }
 
   return (
     <>
@@ -68,7 +76,7 @@ const Form = () => {
       {isLoading && <b>Loading tasks...</b>}
       {error && <b>{error}</b>}
       <ul className={styles.gallery}>
-        {filterItems.map(item => (
+        {filterItems().map(item => (
           <Result data={item} key={item.id} />
         ))}
       </ul>
